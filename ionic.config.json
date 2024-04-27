@@ -1,0 +1,7 @@
+{
+  "name": "ioniceWebpageV2",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}
