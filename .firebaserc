@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "ionicwebpage": {
+      "hosting": {
+        "app": [
+          "ionicwebpage"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "ionicwebpage"
+  }
+}
