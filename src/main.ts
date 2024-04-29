@@ -20,6 +20,6 @@ bootstrapApplication(AppComponent, {
   providers: [
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     provideIonicAngular(),
-    provideRouter(routes), importProvidersFrom(provideFirebaseApp(() => initializeApp({"projectId":"ionicwebpage","appId":"1:952994598736:web:c051e724ce521f59cca655","databaseURL":"https://ionicwebpage.firebaseio.com","storageBucket":"ionicwebpage.appspot.com","locationId":"us-central","apiKey":"AIzaSyBytj8gvFINALswEUnSwtUBBRoDfUuQDJw","authDomain":"ionicwebpage.firebaseapp.com","messagingSenderId":"952994598736"}))), importProvidersFrom(provideAnalytics(() => getAnalytics())), ScreenTrackingService, importProvidersFrom(provideDatabase(() => getDatabase())), importProvidersFrom(provideFunctions(() => getFunctions())), importProvidersFrom(provideStorage(() => getStorage())),
+    provideRouter(routes), importProvidersFrom(provideFirebaseApp(() => initializeApp({"projectId":"ionicwebpage","appId":"1:952994598736:web:c051e724ce521f59cca655","databaseURL":"https://ionicwebpage.firebaseio.com","storageBucket":"ionicwebpage.appspot.com","apiKey":"AIzaSyBytj8gvFINALswEUnSwtUBBRoDfUuQDJw","authDomain":"ionicwebpage.firebaseapp.com","messagingSenderId":"952994598736"}))), importProvidersFrom(provideAnalytics(() => getAnalytics())), ScreenTrackingService, importProvidersFrom(provideDatabase(() => getDatabase())), importProvidersFrom(provideFunctions(() => getFunctions())), importProvidersFrom(provideStorage(() => getStorage())),
   ],
 });
