@@ -1,0 +1,28 @@
+.class1 {
+  --border-color: #0bb8cc;
+  --border-width: 3px;
+  --border-style: solid;
+  --border-radius: 5px;
+}
+
+.logo {
+  font-family: 'Abril Fatface';
+  font-weight: lighter;
+}
+
+ion-label {
+  font-family: 'Poppins';
+  font-weight: bolder;
+}
+
+@media (max-width: 768px) {
+  .hide-sm {
+    display: none;
+  }
+}
+
+@media (min-width: 768px) {
+  .hide-lg {
+    display: none;
+  }
+}
