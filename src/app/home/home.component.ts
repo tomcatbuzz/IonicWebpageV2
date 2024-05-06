@@ -1,4 +1,4 @@
-import { AfterViewChecked, AfterViewInit, Component, ElementRef, HostListener, OnInit, ViewChild, inject } from '@angular/core';
+import { AfterViewChecked, AfterViewInit, Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 // import { ActivatedRoute } from '@angular/router';
 import { IonHeader, IonToolbar, IonButtons, IonMenuButton, IonTitle, IonContent } from '@ionic/angular/standalone';
 
@@ -12,14 +12,15 @@ import * as THREE from 'three'
   standalone: true,
   imports: [IonHeader, IonToolbar, IonButtons, IonMenuButton, IonTitle, IonContent, HeaderComponent],
 })
-export class HomeComponent  implements OnInit, AfterViewInit {
+export class HomeComponent  implements OnInit, AfterViewChecked, OnDestroy {
   @ViewChild('rendererContainer', { static: true }) rendererContainer!: ElementRef<HTMLDivElement>;
   private renderer!: THREE.WebGLRenderer;
   private scene!: THREE.Scene;
   private camera!: THREE.PerspectiveCamera;
-  private geometry!: THREE.BufferGeometry;
-  private material!: THREE.ShaderMaterial;
-  private mesh!: THREE.Mesh;
+  private cube!: THREE.Mesh;
+  // private geometry!: THREE.BufferGeometry;
+  // private material!: THREE.ShaderMaterial;
+  // private mesh!: THREE.Mesh;
   private rendererInitialized = false;
   // public home!: string;
   // private activatedRoute = inject(ActivatedRoute);
@@ -30,83 +31,74 @@ export class HomeComponent  implements OnInit, AfterViewInit {
 
   ngOnInit() {
     // this.home = this.activatedRoute.snapshot.paramMap.get('id') as string;
-    this.initScene();
-    this.initCamera();
-    this.initGeometry();
-    this.initMaterial();
-    this.initMesh();
-    // this.initRenderer();
-    // this.render();
+    this.scene = new THREE.Scene();
+    this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    this.camera.position.z = 5;
     this.renderer = new THREE.WebGLRenderer({ antialias: true });
+    const geometry = new THREE.BoxGeometry();
+    const material = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+    this.cube = new THREE.Mesh(geometry, material);
+    this.scene.add(this.cube);
+    console.log(this.cube, 'cube')
     console.log('this is running', this.renderer)
   }
 
-  ngAfterViewInit() {
+  ngAfterViewChecked() { 
     if(!this.rendererInitialized && this.rendererContainer) {
-      this.initRenderer();
+      // const scene = document.getElementById('rendererContainer')
+      // scene?.appendChild(this.renderer.domElement)
+      this.rendererContainer.nativeElement.appendChild(this.renderer.domElement);
+      this.renderer.setSize(window.innerWidth, window.innerHeight);
       this.render();
-      this.rendererInitialized = true;
-      console.log('this container', this.rendererContainer)
-    } else {
-      console.log('Shit aint running')
+      this.rendererInitialized = true
+      console.log(this.renderer.domElement, 'what is here')
     }
     
+
+    // if(!this.rendererInitialized && this.rendererContainer) {
+    //   this.initRenderer();
+    //   this.render();
+    //   this.rendererInitialized = true;
+    //   console.log('this container', this.rendererContainer)
+    // } else {
+    //   console.log('Shit aint running')
+    // }
   }
 
-  private initScene() {
-    this.scene = new THREE.Scene()
+  private render = () => {
+    requestAnimationFrame(this.render);
+    this.cube.rotation.x += 0.01;
+    this.cube.rotation.y += 0.01;
+    this.renderer.render(this.scene, this.camera)
   }
 
-  private initCamera() {
-    this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    this.camera.position.z = 5;
+  ngOnDestroy() {
+    this.renderer.dispose();
+    this.scene.remove(this.cube);
   }
 
-  private initGeometry() {
-    this.geometry = new THREE.PlaneGeometry(1, 1, 1, 1);
-    // const vertices = new Float32Array( [
-    //   -1.0, -1.0,  1.0, // v0
-    //    1.0, -1.0,  1.0, // v1
-    //    1.0,  1.0,  1.0, // v2
-    // ])
-  }
-
-  private initMaterial() {
-    const vertexShader = `
-    varying vec2 vUv;
+  // private initMaterial() {
+  //   const vertexShader = `
+  //   varying vec2 vUv;
     
-    void main() {
-      vUv = uv;
-      gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-    }
-  `;
-    const fragmentShader = `
-    varying vec2 vUv;
-    void main() {
-      gl_FragColor = vec4(vUv,0.0,1.);
-    }
-  `;
-    this.material = new THREE.ShaderMaterial({
-      vertexShader,
-      fragmentShader
-    });
-  }
+  //   void main() {
+  //     vUv = uv;
+  //     gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+  //   }
+  // `;
+  //   const fragmentShader = `
+  //   varying vec2 vUv;
+  //   void main() {
+  //     gl_FragColor = vec4(vUv,0.0,1.);
+  //   }
+  // `;
+  //   this.material = new THREE.ShaderMaterial({
+  //     vertexShader,
+  //     fragmentShader
+  //   });
+  // }
 
-  private initMesh() {
-    this.mesh = new THREE.Mesh(this.geometry, this.material);
-    this.scene.add(this.mesh);
-  }
 
-  private initRenderer() {
-    // this.renderer = new THREE.WebGLRenderer({ antialias: true });
-    this.renderer.setSize(window.innerWidth, window.innerHeight);
-    this.rendererContainer.nativeElement.appendChild(this.renderer.domElement);
-  }
-
-  private render() {
-    requestAnimationFrame(this.render.bind(this));
-    this.renderer.render(this.scene, this.camera);
-  }
 
   @HostListener('window:resize')
   onWindowResize() {
