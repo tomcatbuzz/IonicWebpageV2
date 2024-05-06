@@ -35,8 +35,37 @@ export class HomeComponent  implements OnInit, AfterViewChecked, OnDestroy {
     this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
     this.camera.position.z = 5;
     this.renderer = new THREE.WebGLRenderer({ antialias: true });
-    const geometry = new THREE.BoxGeometry();
-    const material = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+    // const geometry = new THREE.BoxGeometry();
+    const geometry = new THREE.PlaneGeometry(1, 1, 1, 1);
+    // const material = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+    const vertexShader = `
+    varying vec2 vUv;
+    
+    void main() {
+      vUv = uv;
+      gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+    }
+    `;
+    const fragmentShader = `
+    varying vec2 vUv;
+    void main() {
+      gl_FragColor = vec4(vUv,0.0,1.);
+    }
+    `;
+    const material = new THREE.ShaderMaterial({ 
+      // extensions: {
+      //   derivatives: "#extension GL_OES_standard_derivatives : enable"
+      // },
+      side: THREE.DoubleSide,
+      uniforms: {
+        time: { value: 0 },
+        resolution: { value: new THREE.Vector4() },
+      },
+      // wireframe: true,
+      // transparent: true,
+      vertexShader: vertexShader,
+      fragmentShader: fragmentShader
+    });
     this.cube = new THREE.Mesh(geometry, material);
     this.scene.add(this.cube);
     console.log(this.cube, 'cube')
