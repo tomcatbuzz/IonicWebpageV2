@@ -12,6 +12,8 @@ import { getDatabase, provideDatabase } from '@angular/fire/database';
 import { getFunctions, provideFunctions } from '@angular/fire/functions';
 import { getStorage, provideStorage } from '@angular/fire/storage';
 
+import { RECAPTCHA_V3_SITE_KEY, RecaptchaV3Module } from "ng-recaptcha";
+
 if (environment.production) {
   enableProdMode();
 }
@@ -20,6 +22,11 @@ bootstrapApplication(AppComponent, {
   providers: [
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     provideIonicAngular(),
-    provideRouter(routes), importProvidersFrom(provideFirebaseApp(() => initializeApp({"projectId":"ionicwebpage","appId":"1:952994598736:web:c051e724ce521f59cca655","databaseURL":"https://ionicwebpage.firebaseio.com","storageBucket":"ionicwebpage.appspot.com","apiKey":"AIzaSyBytj8gvFINALswEUnSwtUBBRoDfUuQDJw","authDomain":"ionicwebpage.firebaseapp.com","messagingSenderId":"952994598736"}))), importProvidersFrom(provideAnalytics(() => getAnalytics())), ScreenTrackingService, importProvidersFrom(provideDatabase(() => getDatabase())), importProvidersFrom(provideFunctions(() => getFunctions())), importProvidersFrom(provideStorage(() => getStorage())),
+    provideRouter(routes), 
+    importProvidersFrom(provideFirebaseApp(() => initializeApp({"projectId":"ionicwebpage","appId":"1:952994598736:web:c051e724ce521f59cca655","databaseURL":"https://ionicwebpage.firebaseio.com","storageBucket":"ionicwebpage.appspot.com","apiKey":"AIzaSyBytj8gvFINALswEUnSwtUBBRoDfUuQDJw","authDomain":"ionicwebpage.firebaseapp.com","messagingSenderId":"952994598736"}))), 
+    importProvidersFrom(provideAnalytics(() => getAnalytics())), ScreenTrackingService, importProvidersFrom(provideDatabase(() => getDatabase())), 
+    importProvidersFrom(provideFunctions(() => getFunctions())), 
+    importProvidersFrom(provideStorage(() => getStorage())),
+    importProvidersFrom(RecaptchaV3Module), { provide: RECAPTCHA_V3_SITE_KEY, useValue: '6Lc5l8gpAAAAAFQXvzUkcbYTXVvj4UZKkJB_NwV-' }
   ],
 });

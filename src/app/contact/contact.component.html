@@ -1,4 +1,97 @@
 <app-header></app-header>
-<p>
-  contact works!
-</p>
+<ion-content [fullscreen]="true">
+  <ion-toolbar>
+    <ion-title class="ion-text-center">Contact</ion-title>
+  </ion-toolbar>
+  <ion-grid>
+    <ion-row>
+      <ion-col size="12" size-sm="8" offset-sm="2" class="ion-text-center">
+        <ion-card>
+          <form [formGroup]="contactForm" (ngSubmit)="onSubmit()">
+            <ion-grid>
+              <ion-row>
+                <ion-col size-sm="6" offset-sm="3">
+                  <ion-list>
+                    <ion-item>
+                      <ion-input inputmode="text" 
+                      label="Name"
+                      labelPlacement="floating"
+                      placeholder="Name" 
+                      formControlName="name"></ion-input>
+                    </ion-item>
+                    <ion-note
+                    slot="error"
+                    *ngFor="let error of errorMessages.name">
+                      <div class="error"
+                      *ngIf="isSubmitted && contactForm.get('name')?.dirty || contactForm.get('name')?.touched && contactForm.get('name')?.hasError(error.type)">
+                      {{ error.message }}
+                      </div>
+                    </ion-note>
+                    <ion-item>
+                      <ion-input inputmode="email" 
+                      label="Email"
+                      labelPlacement="floating"
+                      placeholder="Email" 
+                      formControlName="email">
+                      </ion-input>
+                    </ion-item>
+                    <ion-note
+                    slot="error"
+                    *ngFor="let error of errorMessages.email">
+                      <div class="error"
+                        *ngIf="isSubmitted && contactForm.get('email')?.dirty || contactForm.get('email')?.touched && contactForm.get('email')?.hasError(error.type)">
+                          {{ error.message }}
+                      </div>
+                    </ion-note>
+                    <ion-item>
+                      <ion-input inputmode="text"
+                      label="Subject"
+                      labelPlacement="floating" 
+                      placeholder="Subject" 
+                      formControlName="subject"></ion-input>
+                    </ion-item>
+                    <ion-note
+                    slot="error"
+                    *ngFor="let error of errorMessages.subject">
+                      <div class="error"
+                      *ngIf="isSubmitted && contactForm.get('subject')?.dirty || contactForm.get('subject')?.touched && contactForm.get('subject')?.hasError(error.type)">
+                      {{ error.message }}
+                      </div>
+                    </ion-note>
+                    <ion-item>
+                      <ion-textarea rows="6" 
+                      cols="20" 
+                      inputmode="text" 
+                      label="Message"
+                      labelPlacement="floating"
+                      placeholder="Message"
+                      formControlName="message"
+                      ></ion-textarea>
+                    </ion-item>
+                    <ion-note
+                    slot="error"
+                    *ngFor="let error of errorMessages.message">
+                      <div class="error"
+                      *ngIf="isSubmitted && contactForm.get('message')?.dirty || contactForm.get('message')?.touched && contactForm.get('message')?.hasError(error.type)">
+                      {{ error.message }}
+                      </div>
+                    </ion-note>
+                  </ion-list>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col size-sm="6" offset-sm="3">
+                  <ion-button class="ion-padding" color="primary" expand="block"
+                    type="submit" [disabled]="contactForm.invalid">Submit</ion-button>
+                </ion-col>
+                <ion-col size-md="6" offset-md="3" text-center>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </form>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>
+<app-footer></app-footer>
