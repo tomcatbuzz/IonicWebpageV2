@@ -3,5 +3,5 @@ require('dotenv').config();
 import {initializeApp} from 'firebase-admin/app';
 initializeApp();
 
-export {sendContactMessage} from './sendgrid';
+export {sendContactMessageV2} from './sendgrid';
 export {checkRecaptcha} from './recaptcha';

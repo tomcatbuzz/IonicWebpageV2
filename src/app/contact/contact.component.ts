@@ -1,8 +1,8 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-// import { HttpClient } from '@angular/common/http';
-// import { ReCaptchaV3Service } from 'ng-recaptcha';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { ReCaptchaV3Service } from 'ng-recaptcha';
 import { Router } from '@angular/router';
 import { Database, push, ref, set } from '@angular/fire/database';
 import { UIService } from '../ui.service';
@@ -21,9 +21,9 @@ import { FooterComponent } from '../footer/footer.component';
 export class ContactComponent  implements OnInit {
   private db = inject(Database)
   private uiService = inject(UIService)
-  // private http = inject(HttpClient)
+  private http = inject(HttpClient)
   private router = inject(Router)
-  // private recaptchaService = inject(ReCaptchaV3Service)
+  private recaptchaService = inject(ReCaptchaV3Service)
 
   constructor() { }
 
@@ -58,32 +58,69 @@ export class ContactComponent  implements OnInit {
   }
 
   onSubmit() {
-    this.isSubmitted = true
-    const value = this.contactForm.value;
-    const name = value.name;
-    const email = value.email;
-    const subject = value.subject;
-    const message = value.message;
-    
+    // this.isSubmitted = true
+    // const value = this.contactForm.value;
+    // const name = value.name;
+    // const email = value.email;
+    // const subject = value.subject;
+    // const message = value.message;
+    this.recaptchaService.execute('contact')
+    .subscribe((token) => {
+      console.log(token, 'token')
+      this.verifyRecaptcha(token);
+    })
 
-    const formRequest = { name, email, subject, message};
-    const messagesRef = ref(this.db, '/messages');
-    const newMessageRef = push(messagesRef);
-    set(newMessageRef, {...formRequest})
-      .then(() => {
-        // console.log(formRequest, 'What is showing here');
-        this.contactForm.reset();
-        this.uiService.presentToast('Your message was sent', 4000);
-        this.router.navigate(['/']);
-      })
-      .catch((error) => {
-        // console.log(error, 'Error in sending message');
-        this.uiService.presentToast('Error in sending message', 4000);
-        this.contactForm.reset();
-        this.isSubmitted = false;
-        this.router.navigate(['/']);
-        throw error; 
-      });
+    // const formRequest = { name, email, subject, message};
+    // const messagesRef = ref(this.db, '/messages');
+    // const newMessageRef = push(messagesRef);
+    // set(newMessageRef, {...formRequest})
+    //   .then(() => {
+    //     // console.log(formRequest, 'What is showing here');
+    //     this.contactForm.reset();
+    //     this.uiService.presentToast('Your message was sent', 4000);
+    //     this.router.navigate(['/']);
+    //   })
+    //   .catch((error) => {
+    //     // console.log(error, 'Error in sending message');
+    //     this.uiService.presentToast('Error in sending message', 4000);
+    //     this.contactForm.reset();
+    //     this.isSubmitted = false;
+    //     this.router.navigate(['/']);
+    //     throw error; 
+    //   });
+  }
+
+  verifyRecaptcha(token: string) {
+    const url = 'https://us-central1-ionicwebpage.cloudfunctions.net/checkRecaptcha';
+    const headers = new HttpHeaders().set('Content-Type', 'application/json')
+      
+    this.http.post(url, { token }, { headers }).subscribe((response) => {
+      console.log(response, 'data')
+      this.isSubmitted = true
+      const value = this.contactForm.value;
+      const name = value.name;
+      const email = value.email;
+      const subject = value.subject;
+      const message = value.message;
+      const formRequest = { name, email, subject, message };
+      const messagesRef = ref(this.db, '/messages');
+      const newMessageRef = push(messagesRef);
+      set(newMessageRef, { ...formRequest })
+        .then(() => {
+          // console.log(formRequest, 'What is showing here');
+          this.contactForm.reset();
+          this.uiService.presentToast('Your message was sent', 4000);
+          this.router.navigate(['/']);
+        })
+        .catch((error) => {
+          // console.log(error, 'Error in sending message');
+          this.uiService.presentToast('Error in sending message', 4000);
+          this.contactForm.reset();
+          this.isSubmitted = false;
+          this.router.navigate(['/']);
+          throw error;
+        });
+    })
   }
 
 }

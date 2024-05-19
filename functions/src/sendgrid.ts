@@ -5,7 +5,7 @@ const sgMail = require('@sendgrid/mail');
 const SENDGRID_API_KEY = process.env.SENDGRID_API_KEY;
 sgMail.setApiKey(SENDGRID_API_KEY);
 
-export const sendContactMessage = onValueWritten(
+export const sendContactMessageV2 = onValueWritten(
   'messages/{pushkey}', async (change) => {
     const dataAfterChange = change.data.after.val();
     if (change.data.before.val() || !dataAfterChange.subject) {

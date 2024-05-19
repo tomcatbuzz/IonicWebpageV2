@@ -2,7 +2,8 @@ import { enableProdMode, importProvidersFrom } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
 import { RouteReuseStrategy, provideRouter } from '@angular/router';
 import { IonicRouteStrategy, provideIonicAngular } from '@ionic/angular/standalone';
-
+import { HttpClientModule } from '@angular/common/http';
+import { provideAnimations } from '@angular/platform-browser/animations'
 import { routes } from './app/app.routes';
 import { AppComponent } from './app/app.component';
 import { environment } from './environments/environment';
@@ -14,6 +15,8 @@ import { getStorage, provideStorage } from '@angular/fire/storage';
 
 import { RECAPTCHA_V3_SITE_KEY, RecaptchaV3Module } from "ng-recaptcha";
 
+import { pageTransition } from './app/animations/nav-animation';
+
 if (environment.production) {
   enableProdMode();
 }
@@ -21,12 +24,14 @@ if (environment.production) {
 bootstrapApplication(AppComponent, {
   providers: [
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
-    provideIonicAngular(),
+    provideIonicAngular({ navAnimation: pageTransition }),
     provideRouter(routes), 
+    provideAnimations(),
     importProvidersFrom(provideFirebaseApp(() => initializeApp({"projectId":"ionicwebpage","appId":"1:952994598736:web:c051e724ce521f59cca655","databaseURL":"https://ionicwebpage.firebaseio.com","storageBucket":"ionicwebpage.appspot.com","apiKey":"AIzaSyBytj8gvFINALswEUnSwtUBBRoDfUuQDJw","authDomain":"ionicwebpage.firebaseapp.com","messagingSenderId":"952994598736"}))), 
     importProvidersFrom(provideAnalytics(() => getAnalytics())), ScreenTrackingService, importProvidersFrom(provideDatabase(() => getDatabase())), 
     importProvidersFrom(provideFunctions(() => getFunctions())), 
     importProvidersFrom(provideStorage(() => getStorage())),
-    importProvidersFrom(RecaptchaV3Module), { provide: RECAPTCHA_V3_SITE_KEY, useValue: '6Lc5l8gpAAAAAFQXvzUkcbYTXVvj4UZKkJB_NwV-' }
+    importProvidersFrom(RecaptchaV3Module), { provide: RECAPTCHA_V3_SITE_KEY, useValue: '6Lc5l8gpAAAAAFQXvzUkcbYTXVvj4UZKkJB_NwV-' },
+    importProvidersFrom(HttpClientModule)
   ],
 });

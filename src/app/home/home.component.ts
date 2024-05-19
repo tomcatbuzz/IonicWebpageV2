@@ -3,7 +3,9 @@ import { AfterViewChecked, AfterViewInit, Component, ElementRef, HostListener, O
 import { IonHeader, IonToolbar, IonButtons, IonMenuButton, IonTitle, IonContent } from '@ionic/angular/standalone';
 
 import { HeaderComponent } from '../header/header.component';
-import * as THREE from 'three'
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+// import model from '../../assets/facefull.glb'
 
 @Component({
   selector: 'app-home',
@@ -24,12 +26,15 @@ export class HomeComponent  implements OnInit, AfterViewChecked, OnDestroy {
   private rendererInitialized = false;
   // public home!: string;
   // private activatedRoute = inject(ActivatedRoute);
+  private model: any;
 
   constructor() {
     // this.render = this.render.bind(this);
   }
 
   ngOnInit() {
+    const loader = new GLTFLoader()
+    this.model = '../../assets/facefull.glb'
     // this.home = this.activatedRoute.snapshot.paramMap.get('id') as string;
     this.scene = new THREE.Scene();
     this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -67,9 +72,26 @@ export class HomeComponent  implements OnInit, AfterViewChecked, OnDestroy {
       fragmentShader: fragmentShader
     });
     this.cube = new THREE.Mesh(geometry, material);
-    this.scene.add(this.cube);
+    // this.scene.add(this.cube);
     console.log(this.cube, 'cube')
     console.log('this is running', this.renderer)
+
+    // this.loader = new GLTFLoader()
+    loader.load(this.model,(gltf)=>{
+      this.model = gltf.scene.children[0];
+      this.model.position.set(0, -1, -1.5);
+      this.model.rotation.set(0, 0, 0);
+      this.model.scale.set(4000,2000,2000);
+      console.log(this.model.scale);
+      this.scene.add(this.model);
+      this.model.traverse((o: { isMesh: any; material: THREE.MeshBasicMaterial; })=>{
+        if(o.isMesh){
+          console.log(o);
+          o.material = new THREE.MeshBasicMaterial({color:0xff0000})
+        }
+      });
+      console.log(this.model, 'model running?')
+    });
   }
 
   ngAfterViewChecked() { 

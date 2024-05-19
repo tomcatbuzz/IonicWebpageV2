@@ -10,7 +10,8 @@ export const checkRecaptcha = onRequest((req, res) => {
     // 'http://localhost:8080'
     res.set('Access-Control-Allow-Origin', 'https://anthonybuzzelli.dev');
     res.setHeader('Content-Type', 'application/json');
-    const token = req.query.token;
+    const token = req.body.token;
+    // recommended from Claude const token = req.body.token
     console.log(token, 'what is here');
     try {
       const response = await axios.get(`https://recaptcha.google.com/recaptcha/api/siteverify?secret=${SECRET_KEY}&response=${token}`);
