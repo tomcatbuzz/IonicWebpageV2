@@ -94,9 +94,11 @@ export class ContactComponent  implements OnInit {
     const url = 'https://us-central1-ionicwebpage.cloudfunctions.net/checkRecaptcha';
     const headers = new HttpHeaders().set('Content-Type', 'application/json')
       
-    this.http.post(url, { token }, { headers }).subscribe((response) => {
+    this.http.post(url, { token }, { headers }).subscribe((response: any) => {
+      const score = response.score;
       console.log(response, 'data')
-      this.isSubmitted = true
+      if (score >= 0.5) {
+        this.isSubmitted = true
       const value = this.contactForm.value;
       const name = value.name;
       const email = value.email;
@@ -120,7 +122,10 @@ export class ContactComponent  implements OnInit {
           this.router.navigate(['/']);
           throw error;
         });
+      } else {
+        this.uiService.presentToast('Please complete the reCAPTCHA', 4000);
+        console.log('There was an error with recaptcha')
+      }
     })
   }
-
 }
