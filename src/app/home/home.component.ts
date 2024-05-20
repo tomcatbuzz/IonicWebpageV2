@@ -87,7 +87,10 @@ export class HomeComponent  implements OnInit, AfterViewChecked, OnDestroy {
       this.model.traverse((o: { isMesh: any; material: THREE.MeshBasicMaterial; })=>{
         if(o.isMesh){
           console.log(o);
+          // original color for threejs depth texture
+          // o.material = new THREE.MeshBasicMaterial({color:0x000000})
           o.material = new THREE.MeshBasicMaterial({color:0xff0000})
+          
         }
       });
       console.log(this.model, 'model running?')

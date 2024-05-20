@@ -23,9 +23,9 @@ export class ContactComponent  implements OnInit {
   private uiService = inject(UIService)
   private http = inject(HttpClient)
   private router = inject(Router)
-  private recaptchaService = inject(ReCaptchaV3Service)
+  // private recaptchaService = inject(ReCaptchaV3Service)
 
-  constructor() { }
+  constructor(private recaptchaService: ReCaptchaV3Service) { }
 
   isSubmitted = false;
 
