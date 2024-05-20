@@ -31,7 +31,7 @@ bootstrapApplication(AppComponent, {
     importProvidersFrom(provideAnalytics(() => getAnalytics())), ScreenTrackingService, importProvidersFrom(provideDatabase(() => getDatabase())), 
     importProvidersFrom(provideFunctions(() => getFunctions())), 
     importProvidersFrom(provideStorage(() => getStorage())),
-    importProvidersFrom(RecaptchaV3Module), { provide: RECAPTCHA_V3_SITE_KEY, useValue: '6Lc5l8gpAAAAAFQXvzUkcbYTXVvj4UZKkJB_NwV-' },
+    importProvidersFrom(RecaptchaV3Module), { provide: RECAPTCHA_V3_SITE_KEY, useValue: environment.recaptcha.siteKey },
     importProvidersFrom(HttpClientModule)
   ],
 });
