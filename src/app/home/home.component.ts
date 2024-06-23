@@ -5,6 +5,7 @@ import { IonHeader, IonToolbar, IonButtons, IonMenuButton, IonTitle, IonContent 
 import { HeaderComponent } from '../header/header.component';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+import { FooterComponent } from '../footer/footer.component';
 // import model from '../../assets/facefull.glb'
 
 @Component({
@@ -12,9 +13,9 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
   standalone: true,
-  imports: [IonHeader, IonToolbar, IonButtons, IonMenuButton, IonTitle, IonContent, HeaderComponent],
+  imports: [IonHeader, IonToolbar, IonButtons, IonMenuButton, IonTitle, IonContent, HeaderComponent, FooterComponent],
 })
-export class HomeComponent  implements OnInit, OnDestroy {
+export class HomeComponent  implements OnInit, OnDestroy, AfterViewChecked {
   @ViewChild('rendererContainer', { static: true }) rendererContainer!: ElementRef<HTMLDivElement>;
   private renderer!: THREE.WebGLRenderer;
   private scene!: THREE.Scene;
@@ -31,21 +32,23 @@ export class HomeComponent  implements OnInit, OnDestroy {
   // private activatedRoute = inject(ActivatedRoute);
   private model!: any;
   time: 0 = 0;
-  modelLoaded: any;
+
+  // this.width = this.rendererContainer.nativeElement.offsetWidth;
+  // this.height = this.rendererContainer.nativeElement.offsetHeight;
 
   constructor() {
     this.renderScene = this.renderScene.bind(this);
   }
 
   ngOnInit() {
-    const width = this.rendererContainer.nativeElement.offsetWidth;
-    const height = this.rendererContainer.nativeElement.offsetHeight;
+    // const width = this.rendererContainer.nativeElement.offsetWidth;
+    // const height = this.rendererContainer.nativeElement.offsetHeight;
 
-    if (width > 0 && height > 0) {
-      this.initRenderTargets(width, height);
-    } else {
-      console.warn('Invalid dimensions for render targets');
-    }
+    // if (width > 0 && height > 0) {
+    //   this.initRenderTargets(width, height);
+    // } else {
+    //   console.warn('Invalid dimensions for render targets');
+    // }
     // const loader = new GLTFLoader()
     // this.model = '../../assets/facefull.glb'
     // this.home = this.activatedRoute.snapshot.paramMap.get('id') as string;
@@ -80,26 +83,26 @@ uniform float cameraFar;
 attribute float y;
 
 // ORIGINAL CODE BELOW
-// float readDepth( sampler2D depthSampler, vec2 coord ) {
-// 	float fragCoordZ = texture2D( depthSampler, coord ).x;
-// 	float viewZ = perspectiveDepthToViewZ( fragCoordZ, cameraNear, cameraFar );
-// 	return viewZToOrthographicDepth( viewZ, cameraNear, cameraFar );
-// }
+float readDepth( sampler2D depthSampler, vec2 coord ) {
+	float fragCoordZ = texture2D( depthSampler, coord ).x;
+	float viewZ = perspectiveDepthToViewZ( fragCoordZ, cameraNear, cameraFar );
+	return viewZToOrthographicDepth( viewZ, cameraNear, cameraFar );
+}
 
 // GPT SUGGESTED
-float perspectiveDepthToViewZ( const in float invClipZ, const in float near, const in float far ) {
-  return ( near * far ) / ( ( far - near ) * invClipZ - far );
-}
+// float perspectiveDepthToViewZ( const in float invClipZ, const in float near, const in float far ) {
+//   return ( near * far ) / ( ( far - near ) * invClipZ - far );
+// }
 
-float viewZToOrthographicDepth( const in float viewZ, const in float near, const in float far ) {
-  return ( viewZ + near ) / ( near - far );
-}
+// float viewZToOrthographicDepth( const in float viewZ, const in float near, const in float far ) {
+//   return ( viewZ + near ) / ( near - far );
+// }
 
-float readDepth( sampler2D depthSampler, vec2 coord ) {
-  float fragCoordZ = texture2D( depthSampler, coord ).x;
-  float viewZ = perspectiveDepthToViewZ( fragCoordZ, cameraNear, cameraFar );
-  return viewZToOrthographicDepth( viewZ, cameraNear, cameraFar );
-}
+// float readDepth( sampler2D depthSampler, vec2 coord ) {
+//   float fragCoordZ = texture2D( depthSampler, coord ).x;
+//   float viewZ = perspectiveDepthToViewZ( fragCoordZ, cameraNear, cameraFar );
+//   return viewZToOrthographicDepth( viewZ, cameraNear, cameraFar );
+// }
 
 // Simplex 2D noise
 //
@@ -159,9 +162,9 @@ float snoise(vec3 v){
 // Permutations
   i = mod(i, 289.0 ); 
   vec4 p = permute( permute( permute( 
-             i.z + vec4(0.0, i1.z, i2.z, 1.0 ))
-           + i.y + vec4(0.0, i1.y, i2.y, 1.0 )) 
-           + i.x + vec4(0.0, i1.x, i2.x, 1.0 ));
+  i.z + vec4(0.0, i1.z, i2.z, 1.0 ))
+  + i.y + vec4(0.0, i1.y, i2.y, 1.0 )) 
+  + i.x + vec4(0.0, i1.x, i2.x, 1.0 ));
 
 // Gradients
 // ( N*N points uniformly over a square, mapped onto an octahedron.)
@@ -231,26 +234,26 @@ void main() {
     float PI = 3.141592653589793238;
 
     // ORIGINAL CODE BELOW
-    // float readDepth( sampler2D depthSampler, vec2 coord ) {
-    //   float fragCoordZ = texture2D( depthSampler, coord ).x;
-    //   float viewZ = perspectiveDepthToViewZ( fragCoordZ, cameraNear, cameraFar );
-    //   return viewZToOrthographicDepth( viewZ, cameraNear, cameraFar );
-    // }
-
-    // GPT SUGGESTED CODE
-    float perspectiveDepthToViewZ( const in float invClipZ, const in float near, const in float far ) {
-      return ( near * far ) / ( ( far - near ) * invClipZ - far );
-    }
-    
-    float viewZToOrthographicDepth( const in float viewZ, const in float near, const in float far ) {
-      return ( viewZ + near ) / ( near - far );
-    }
-    
     float readDepth( sampler2D depthSampler, vec2 coord ) {
       float fragCoordZ = texture2D( depthSampler, coord ).x;
       float viewZ = perspectiveDepthToViewZ( fragCoordZ, cameraNear, cameraFar );
       return viewZToOrthographicDepth( viewZ, cameraNear, cameraFar );
     }
+
+    // GPT SUGGESTED CODE
+    // float perspectiveDepthToViewZ( const in float invClipZ, const in float near, const in float far ) {
+    //   return ( near * far ) / ( ( far - near ) * invClipZ - far );
+    // }
+    
+    // float viewZToOrthographicDepth( const in float viewZ, const in float near, const in float far ) {
+    //   return ( viewZ + near ) / ( near - far );
+    // }
+    
+    // float readDepth( sampler2D depthSampler, vec2 coord ) {
+    //   float fragCoordZ = texture2D( depthSampler, coord ).x;
+    //   float viewZ = perspectiveDepthToViewZ( fragCoordZ, cameraNear, cameraFar );
+    //   return viewZToOrthographicDepth( viewZ, cameraNear, cameraFar );
+    // }
     void main()	{
     // gl_FragColor = vec4(vUv,0.0,1.);
 
@@ -358,10 +361,10 @@ void main() {
     //   console.log(this.model, 'model running?')
     // });
 
-    this.loadModel();
-    this.initRenderer();
-    this.startRenderLoop();
-    this.initRenderTargets(width, height);
+    // this.loadModel();
+    // this.initRenderer();
+    // this.startRenderLoop();
+    // this.initRenderTargets(width, height);
   }
 
   initRenderTargets(width: number, height: number) {
@@ -415,7 +418,7 @@ void main() {
       });
 
       this.setupModel();
-      this.startRenderLoop();
+      // this.startRenderLoop();
     })
   }
 
@@ -487,7 +490,7 @@ void main() {
     this.target1 = temp;
   
     // Request the next frame
-    this.renderLoop = requestAnimationFrame(this.renderScene);
+    // this.renderLoop = requestAnimationFrame(this.renderScene);
   };
 
   // ORIGINAL WORKING FOR RENDER
@@ -504,20 +507,23 @@ void main() {
   // }
 
   // NEW NGAFTERVIEWCHECKED
-  // ngAfterViewChecked() {
-  //   if (!this.rendererInitialized && this.rendererContainer) {
-  //     const width = this.rendererContainer.nativeElement.offsetWidth;
-  //     const height = this.rendererContainer.nativeElement.offsetHeight;
-  //     if (width > 0 && height > 0) {
-  //       // Create the render targets with valid dimensions
-  //       this.initRenderTargets(width, height);
-  //       // ... (other initialization code)
-  //     } else {
-  //       console.warn('Invalid dimensions for render targets');
-  //     }
-  //     this.rendererInitialized = true;
-  //   }
-  // }
+  ngAfterViewChecked() {
+    if (!this.rendererInitialized && this.rendererContainer) {
+      const width = this.rendererContainer.nativeElement.offsetWidth;
+      const height = this.rendererContainer.nativeElement.offsetHeight;
+      if (width > 0 && height > 0) {
+        // Create the render targets with valid dimensions
+        this.initRenderTargets(width, height);
+        // ... (other initialization code)
+      } else {
+        console.warn('Invalid dimensions for render targets');
+      }
+      this.rendererInitialized = true;
+    }
+    this.loadModel();
+    this.initRenderer();
+    this.startRenderLoop();
+  }
 
   // private render = () => { 
   //   this.time++; 
@@ -577,7 +583,8 @@ void main() {
     const height = this.rendererContainer.nativeElement.offsetHeight;
     this.camera.aspect = window.innerWidth / window.innerHeight;
     this.camera.updateProjectionMatrix();
-    this.renderer.setSize(window.innerWidth, window.innerHeight);
+    // this.renderer.setSize(window.innerWidth, window.innerHeight);
+    this.renderer.setSize(width, height);
 
     // Update render target dimensions
     this.updateRenderTargetDimensions(width, height);

@@ -3,13 +3,14 @@ import { IonHeader, IonToolbar, IonButtons, IonButton, IonMenuButton, IonTitle, 
 
 import { HeaderComponent } from '../header/header.component';
 import * as THREE from 'three';
+import { FooterComponent } from '../footer/footer.component';
 
 @Component({
   selector: 'app-about',
   templateUrl: './about.component.html',
   styleUrls: ['./about.component.scss'],
   standalone: true,
-  imports: [IonHeader, IonToolbar, IonButtons, IonButton, IonMenuButton, IonTitle, IonContent, HeaderComponent],
+  imports: [IonHeader, IonToolbar, IonButtons, IonButton, IonMenuButton, IonTitle, IonContent, HeaderComponent, FooterComponent],
 })
 export class AboutComponent  implements OnInit {
 
