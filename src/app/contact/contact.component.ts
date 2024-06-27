@@ -71,6 +71,7 @@ export class ContactComponent  implements OnInit {
     const headers = new HttpHeaders().set('Content-Type', 'application/json')
       
     this.http.post(url, { token }, { headers }).subscribe((response: any) => {
+      console.log(response, 'response')
       this.zone.run(() => {
         const score = response.score;
         console.log(response, 'data')

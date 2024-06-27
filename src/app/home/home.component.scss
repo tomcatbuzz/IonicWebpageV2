@@ -28,7 +28,74 @@ ion-menu-button {
 // }
 
 #rendererContainer {
+  position: fixed;
   width: 100vw;
   height: 100vh;
   display: block;
+  z-index: -1;
+  overflow: hidden;
 }
+
+.header {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2;
+  overflow: hidden;
+  width: 100%;
+  color: white;
+
+}
+
+.side {
+  display: flex;
+  justify-content: flex-start;
+  position: absolute;
+  z-index: 3;
+  background-color: black;
+  
+  h1 {
+
+    text-transform: uppercase;
+    color: white;
+    position: absolute;
+    font-size: 8rem;
+    left: 23%;
+    top: 50%;
+    transform: translate(-50%, 150%) rotate(-90deg);
+    transition: transform 300ms ease-in-out;
+  }
+  // h1:hover {
+  //   // color: red;
+  //   opacity: 0.5;
+  //   mix-blend-mode: color-dodge;
+  //   // transform: translateX(-40%, 150%) rotate(-90deg);
+  // }
+}
+
+.right {
+  display: flex;
+  justify-content: flex-end;
+  // position: absolute;
+  z-index: 3;
+  background-color: black;
+
+  
+  h1 {
+    text-transform: uppercase;
+    color: white;
+    position: absolute;
+    font-size: 8rem;
+    right: -1%;
+    top: 50%;
+    transform: translate(50%, -20%) rotate(-90deg);
+  }
+  h1:hover {
+    // color: red;
+    opacity: 0.5;
+    mix-blend-mode: difference;
+  }
+}
+
+
