@@ -62,7 +62,7 @@ export class HomeComponent  implements OnInit, OnDestroy {
     // this.scene.add(this.mesh);
 
     this.renderer = new THREE.WebGLRenderer({ antialias: true });
-    console.log('this is running', this.renderer)
+    // console.log('this is running', this.renderer)
     this.rendererContainer.nativeElement.appendChild(this.renderer.domElement);
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     this.renderer.setSize(window.innerWidth, window.innerHeight);
@@ -133,6 +133,8 @@ export class HomeComponent  implements OnInit, OnDestroy {
             y * (size + gap) - (gridSize / 2) * (size + gap),
             z * (size + gap) - (gridSize / 2) * (size + gap)
           );
+
+          // cube.scale.set(0.5, 0.5, 0.5)
           this.scene.add(cube);
           this.cubes.push(cube);
         }
@@ -233,15 +235,25 @@ export class HomeComponent  implements OnInit, OnDestroy {
 
   @HostListener('window:resize')
   onWindowResize() {
-    console.log('this function is working')
+    // console.log('this function is working')
     // const width = this.rendererContainer.nativeElement.offsetWidth;
     // const height = this.rendererContainer.nativeElement.offsetHeight;
+    // original below
     const width = this.rendererContainer.nativeElement.clientWidth || window.innerWidth;
     const height = this.rendererContainer.nativeElement.clientHeight || window.innerHeight;
+    // const rect = this.rendererContainer.nativeElement.getBoundingClientRect();
+    // console.log(rect, 'what is the rect????')
+    // const width = rect.width;
+    // const height = rect.height;
     console.log(width, "width")
     this.camera.aspect = width / height;
     this.camera.updateProjectionMatrix();
     this.renderer.setSize(width, height, false);
+    // attempt at resize cube(mesh) not working
+    // const scale = Math.min(width, height) / 500;
+    // this.cubes.forEach(cube => {
+    //   cube.scale.set(scale, scale, scale);
+    // })
 
     // Update the mesh scale
     // const aspectRatio = width / height;
