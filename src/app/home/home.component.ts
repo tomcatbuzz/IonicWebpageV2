@@ -128,6 +128,7 @@ export class HomeComponent  implements OnInit, OnDestroy {
           const geometry = new THREE.BoxGeometry(size, size, size);
           // const material = new THREE.MeshNormalMaterial(); // Placeholder material, will replace with ShaderMaterial
           const cube = new THREE.Mesh(geometry, material);
+          cube.scale.set(window.innerWidth / window.innerHeight, 1, 1);
           cube.position.set(
             x * (size + gap) - (gridSize / 2) * (size + gap),
             y * (size + gap) - (gridSize / 2) * (size + gap),
@@ -247,8 +248,13 @@ export class HomeComponent  implements OnInit, OnDestroy {
     // const height = rect.height;
     console.log(width, "width")
     this.camera.aspect = width / height;
+    // this.camera.fov =
+    //   2 *
+    //   Math.atan(this.width / this.camera.aspect / (2 * this.cameraDistance)) *
+    //   (180 / Math.PI); // in degrees
     this.camera.updateProjectionMatrix();
     this.renderer.setSize(width, height, false);
+    // this.cubes.scale.set(width / height, 1, 1);
     // attempt at resize cube(mesh) not working
     // const scale = Math.min(width, height) / 500;
     // this.cubes.forEach(cube => {
