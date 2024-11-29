@@ -19,7 +19,7 @@ import { cube } from 'ionicons/icons';
   imports: [IonHeader, IonToolbar, IonButtons, IonMenuButton, IonTitle, IonContent, HeaderComponent, FooterComponent, ShuffleComponent],
 })
 export class HomeComponent  implements OnInit, OnDestroy {
-  @ViewChild('rendererContainer', { static: true }) rendererContainer!: ElementRef<HTMLDivElement>;
+  @ViewChild('rendererContainer', { static: true }) rendererContainer!: ElementRef<HTMLCanvasElement>;
   private renderer!: THREE.WebGLRenderer;
   private scene!: THREE.Scene;
   private camera!: THREE.PerspectiveCamera;
@@ -47,6 +47,8 @@ export class HomeComponent  implements OnInit, OnDestroy {
     
   init() {
     this.scene = new THREE.Scene();
+    this.scene.background = new THREE.Color('skyblue');
+
     this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.01, 10);
     // this.camera.position.set(0, -0.5, 1);
     // this.camera.position.z = 2;
