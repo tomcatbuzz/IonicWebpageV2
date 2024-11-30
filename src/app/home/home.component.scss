@@ -27,6 +27,18 @@ ion-menu-button {
 //   text-decoration: none;
 // }
 
+.canvasWrapper {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  // overflow: hidden;
+  // width: 100%;
+  color: white;
+
+}
+
 .construction { 
   font-size: 3rem;
   color: black;
@@ -38,26 +50,26 @@ ion-menu-button {
 }
 
 
-#rendererContainer {
-  position: fixed;
-  width: 100%;
-  height: 100%;
-  display: block;
-  top: 0;
-  left: 0;
-  z-index: -1;
-  overflow: hidden;
-}
+// #rendererContainer {
+//   position: fixed;
+//   width: 100%;
+//   height: 100%;
+//   display: block;
+//   top: 0;
+//   left: 0;
+//   z-index: -1;
+//   overflow: hidden;
+// }
 
 .header {
   position: absolute;
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 2;
+  z-index: 6;
   overflow: hidden;
   width: 100%;
-  color: white;
+  // color: white;
 
 }
 

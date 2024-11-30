@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostListener, OnInit, ViewChild, OnDestroy } from '@angular/core';
+import { Component, ElementRef, HostListener, OnInit, ViewChild, OnDestroy, AfterViewInit } from '@angular/core';
 import * as THREE from 'three';
 
 @Component({
@@ -7,7 +7,7 @@ import * as THREE from 'three';
   styleUrls: ['./canvas-case.component.scss'],
   standalone: true,
 })
-export class CanvasCaseComponent implements OnInit, OnDestroy {
+export class CanvasCaseComponent implements AfterViewInit, OnDestroy {
 @ViewChild('rendererContainer', { static: true }) rendererContainer!: ElementRef<HTMLCanvasElement>;
 private renderer!: THREE.WebGLRenderer;
 private scene!: THREE.Scene;
@@ -28,9 +28,12 @@ constructor() {
   // this.renderScene = this.renderScene.bind(this);
 }
 
-ngOnInit() {
-  this.init();
-  this.animate();
+ngAfterViewInit() {
+  setTimeout(() => {
+    this.init();
+    this.animate();
+  }, 500)
+  
   // this.onWindowResize()
 }
   
@@ -53,7 +56,8 @@ init() {
   // this.scene.add(this.mesh);
 
   this.renderer = new THREE.WebGLRenderer({ antialias: true });
-  // console.log('this is running', this.renderer)
+  console.log('this is running', this.renderer)
+  
   this.rendererContainer.nativeElement.appendChild(this.renderer.domElement);
   this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   this.renderer.setSize(window.innerWidth, window.innerHeight);
