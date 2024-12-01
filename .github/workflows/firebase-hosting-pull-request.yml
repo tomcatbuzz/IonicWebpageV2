@@ -13,6 +13,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Set up .npmrc file for greensock private registry
+        run: | 
+          echo "@gsap:registry=https://npm.greensock.com" >> .npmrc 
+          echo "//npm.greensock.com/:_authToken=${{ secrets.GREENSOCK_AUTH_TOKEN }}" >> .npmrc
       - run: npm ci && npm run build
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:

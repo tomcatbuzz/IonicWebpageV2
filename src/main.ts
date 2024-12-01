@@ -27,11 +27,12 @@ bootstrapApplication(AppComponent, {
     provideIonicAngular({ navAnimation: pageTransition }),
     provideRouter(routes), 
     provideAnimations(),
+    importProvidersFrom(
     provideFirebaseApp(() => initializeApp({"projectId":"ionicwebpage","appId":"1:952994598736:web:c051e724ce521f59cca655","databaseURL":"https://ionicwebpage.firebaseio.com","storageBucket":"ionicwebpage.appspot.com","apiKey":"AIzaSyBytj8gvFINALswEUnSwtUBBRoDfUuQDJw","authDomain":"ionicwebpage.firebaseapp.com","messagingSenderId":"952994598736"})), 
     provideAnalytics(() => getAnalytics()), ScreenTrackingService, 
     provideDatabase(() => getDatabase()), 
     provideFunctions(() => getFunctions()), 
-    provideStorage(() => getStorage()),
+    provideStorage(() => getStorage())),
     importProvidersFrom(RecaptchaV3Module), 
     
     { provide: RECAPTCHA_V3_SITE_KEY, useValue: environment.recaptcha.siteKey },

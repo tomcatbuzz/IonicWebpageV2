@@ -1,5 +1,6 @@
 import { Component, ElementRef, HostListener, OnInit, ViewChild, OnDestroy, AfterViewInit } from '@angular/core';
 import * as THREE from 'three';
+import gsap from 'gsap';
 
 @Component({
   selector: 'app-canvas-case',
@@ -14,8 +15,10 @@ private scene!: THREE.Scene;
 private camera!: THREE.PerspectiveCamera;
 private cubes: THREE.Mesh[] = [];
 private clock = new THREE.Clock();
-private hoverStrength = 0;
-private hoverPosition = new THREE.Vector3();
+private mouse = new THREE.Vector2();
+private basePositions: THREE.Vector3[] = [];
+// private hoverStrength = 0;
+// private hoverPosition = new THREE.Vector3();
 // private hoverTimeout: any;
 // private target!: THREE.WebGLRenderTarget;
 // private target1!: THREE.WebGLRenderTarget;
@@ -67,6 +70,7 @@ init() {
 
   // Could use @HostListener???
   this.renderer.domElement.addEventListener('mousemove', this.onMouseMove.bind(this));
+  // window.addEventListener('mousemove', this.onMouseMove.bind(this));
 
   // Delay the call to onWindowResize to ensure rendererContainer is initialized
   setTimeout(() => this.onWindowResize(), 0);
@@ -75,30 +79,42 @@ init() {
 createCubes() {
   const vertexShader = `
     uniform float time;
-    uniform vec3 hoverPosition;
-    uniform float hoverStrength;
+    uniform vec3 mousePosition;
+    uniform float mouseStrength;
     varying vec3 vPosition;
+    varying float vDistanceToMouse;
 
     void main() {
       vPosition = position;
       vec3 transformed = position;
       
-      // Pulse effect with sine wave
+      // Base Pulse effect with sine wave ORIGINAL movement
       transformed.z += sin(time + position.x * 5.0) * 0.2;
 
-      // Hover effect
-      float distanceToHover = distance(hoverPosition, position);
-      transformed += normalize(position - hoverPosition) * hoverStrength * exp(-distanceToHover * 5.0);
-      
+      // Calculate distance to mouse point
+      float distanceToMouse = distance(mousePosition, transformed);
+      vDistanceToMouse = distanceToMouse;
+
+      // Mouse effect
+      float mouseEffect = smoothstep(1.0, 0.0, distanceToMouse / 3.0);
+      transformed.z += mouseEffect * mouseStrength * 0.5;
+
+      // vPosition = transformed
       gl_Position = projectionMatrix * modelViewMatrix * vec4(transformed, 1.0);
     }
   `;
 
   const fragmentShader = `
+    uniform float mouseStrength;
     varying vec3 vPosition;
+    varying float vDistanceToMouse;
     
     void main() {
-      gl_FragColor = vec4(vPosition * 0.5 + 0.5, 1.0);
+      vec3 baseColor = vec3(0.5, 0.7, 0.9);
+      float colorIntensity = 1.0 + (mouseStrength * 0.3);
+
+      vec3 finalColor = baseColor * colorIntensity;
+      gl_FragColor = vec4(finalColor, 1.0);
     }
   `;
 
@@ -112,25 +128,46 @@ createCubes() {
     fragmentShader,
     uniforms: {
       time: { value: 0 },
-      hoverPosition: { value: new THREE.Vector3() },
-      hoverStrength: { value: 0 }
+      mousePosition: { value: new THREE.Vector3() },
+      mouseStrength: { value: 0 }
     }
   });
 
+  // My Original cube loop
+  // for (let x = 0; x < gridSize; x++) {
+  //   for (let y = 0; y < gridSize; y++) {
+  //     for (let z = 0; z < gridSize; z++) {
+  //       const geometry = new THREE.BoxGeometry(size, size, size);
+  //       // const material = new THREE.MeshNormalMaterial(); // Placeholder material, will replace with ShaderMaterial
+  //       const cube = new THREE.Mesh(geometry, material);
+  //       cube.scale.set(window.innerWidth / window.innerHeight, 1, 1);
+  //       cube.position.set(
+  //         x * (size + gap) - (gridSize / 2) * (size + gap),
+  //         y * (size + gap) - (gridSize / 2) * (size + gap),
+  //         z * (size + gap) - (gridSize / 2) * (size + gap)
+  //       );
+
+  //       // cube.scale.set(0.5, 0.5, 0.5)
+  //       this.scene.add(cube);
+  //       this.cubes.push(cube);
+  //     }
+  //   }
+  // }
   for (let x = 0; x < gridSize; x++) {
     for (let y = 0; y < gridSize; y++) {
       for (let z = 0; z < gridSize; z++) {
         const geometry = new THREE.BoxGeometry(size, size, size);
-        // const material = new THREE.MeshNormalMaterial(); // Placeholder material, will replace with ShaderMaterial
-        const cube = new THREE.Mesh(geometry, material);
-        cube.scale.set(window.innerWidth / window.innerHeight, 1, 1);
-        cube.position.set(
-          x * (size + gap) - (gridSize / 2) * (size + gap),
-          y * (size + gap) - (gridSize / 2) * (size + gap),
-          z * (size + gap) - (gridSize / 2) * (size + gap)
-        );
+        const cube = new THREE.Mesh(geometry, material.clone());
+        
+        const posX = x * (size + gap) - (gridSize / 2) * (size + gap);
+        const posY = y * (size + gap) - (gridSize / 2) * (size + gap);
+        const posZ = z * (size + gap) - (gridSize / 2) * (size + gap);
+        
+        cube.position.set(posX, posY, posZ);
+        
+        // Store base positions for reset
+        this.basePositions.push(cube.position.clone());
 
-        // cube.scale.set(0.5, 0.5, 0.5)
         this.scene.add(cube);
         this.cubes.push(cube);
       }
@@ -173,14 +210,32 @@ animate() {
   // this.mesh.rotation.x += 0.001;
   // this.mesh.rotation.y += 0.002;
   const time = this.clock.getElapsedTime();
-  this.cubes.forEach(cube => {
+
+  // Error on [index] possibly with forEach usage
+  // this.cubes.forEach(cube => {
+  //   const material = cube.material as THREE.ShaderMaterial;
+  //   material.uniforms['time'].value = time;
+
+  //   cube.position.z = this.basePositions[index].z + Math.sin(time * 2 + cube.position.x * 5) * 0.1;
+
+  for (let i = 0; i < this.cubes.length; i++) {
+    const cube = this.cubes[i];
     const material = cube.material as THREE.ShaderMaterial;
-    if (material.uniforms['time']) {
-      material.uniforms['time'].value = time;
-      material.uniforms['hoverPosition'].value.copy(this.hoverPosition);
-      material.uniforms['hoverStrength'].value = this.hoverStrength;
-    }
-  });
+    material.uniforms['time'].value = time;
+    
+    // Use the base position to calculate wave
+    const newPosition = this.basePositions[i].clone();
+    newPosition.z += Math.sin(time * 2 + newPosition.x * 5) * 0.1;
+    cube.position.copy(newPosition);
+  }
+
+    // original code might not have been working
+    // if (material.uniforms['time']) {
+    //   material.uniforms['time'].value = time;
+    //   material.uniforms['hoverPosition'].value.copy(this.hoverPosition);
+    //   material.uniforms['hoverStrength'].value = this.hoverStrength;
+    // }
+  // });
   // this.cubes.forEach(cube => {
   //   cube.rotation.x += 0.01;
   //   cube.rotation.y += 0.01;
@@ -189,43 +244,82 @@ animate() {
 }
 
 onMouseMove(event: MouseEvent) {
-  const mouse = new THREE.Vector2();
-  mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-  mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+  // const mouse = new THREE.Vector2();
+  this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+  this.mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
 
   const raycaster = new THREE.Raycaster();
-  raycaster.setFromCamera(mouse, this.camera);
-
+  raycaster.setFromCamera(this.mouse, this.camera);
   const intersects = raycaster.intersectObjects(this.cubes);
-  // console.log(intersects, "mouse over ")
+  // console.log(intersects, "mouse over")
+
+  // Reset interaction
+  this.cubes.forEach((cube, index) => {
+    const material = cube.material as THREE.ShaderMaterial;
+    material.uniforms['mouseStrength'].value = 0;
+
+    gsap.to(cube.position, {
+      z: this.basePositions[index].z, 
+      duration: 0.5,
+      ease: 'power2.out'
+    })
+  });
+
   if (intersects.length > 0) {
-    const intersectedCube = intersects[0].object;
-    this.hoverPosition.copy(intersectedCube.position);
-
-    // Animate hoverStrength using gsap
-    this.cubes.forEach(cube => {
+    intersects.forEach(intersect => {
+      const cube = intersect.object as THREE.Mesh;
       const material = cube.material as THREE.ShaderMaterial;
-      gsap.to(material.uniforms['hoverStrength'], {
-        value: 1.5,
-        duration: 0.3,
-        onComplete: () => {
-          gsap.to(material.uniforms['hoverStrength'], {
-            value: 0,
-            duration: 0.3
-          });
-        // console.log(material.uniforms['hoverStrength'], "what is here")
 
-        }
-        
+      // map mouse positions
+      const mouseWorldPosition = new THREE.Vector3(
+        this.mouse.x * 5,
+        this.mouse.y * 5,
+        0
+      );
+      // console.log(mouse, 'MOUSE')
+      material.uniforms['mousePosition'].value.copy(mouseWorldPosition);
+
+      gsap.to(material.uniforms['mouseStrength'], {
+        value: 1,
+        duration: 0.3,
+        ease: 'power2.out'
       });
+
+      gsap.to(cube.position, {
+        z: cube.position.z + 0.1,
+        duration: 0.3,
+        ease: 'power2.out'
+      })
     });
-    
   }
+
+  // ORIGINAL code may not be working
+  // if (intersects.length > 0) {
+  //   const intersectedCube = intersects[0].object;
+  //   this.hoverPosition.copy(intersectedCube.position);
+
+  //   // Animate hoverStrength using gsap
+  //   this.cubes.forEach(cube => {
+  //     const material = cube.material as THREE.ShaderMaterial;
+  //     gsap.to(material.uniforms['hoverStrength'], {
+  //       value: 1.5,
+  //       duration: 0.3,
+  //       onComplete: () => {
+  //         gsap.to(material.uniforms['hoverStrength'], {
+  //           value: 0,
+  //           duration: 0.3
+  //         });
+  //       // console.log(material.uniforms['hoverStrength'], "what is here")
+  //       }
+  //     });
+  //   });
+  // }
 }
 
 ngOnDestroy() {
   this.renderer.dispose();
   this.scene.clear();
+  this.renderer.domElement.removeEventListener('mousemove', this.onMouseMove.bind(this));
   // clearTimeout(this.hoverTimeout);
 }
 

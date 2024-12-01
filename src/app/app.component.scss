@@ -43,6 +43,7 @@ ion-menu.md ion-item {
   --padding-start: 10px;
   --padding-end: 10px;
   border-radius: 4px;
+  cursor: pointer;
 }
 
 ion-menu.md ion-item.selected {
@@ -78,6 +79,7 @@ ion-menu.ios ion-item {
   --padding-start: 16px;
   --padding-end: 16px;
   --min-height: 50px;
+  cursor: pointer;
 }
 
 ion-menu.ios ion-item.selected ion-icon {
