@@ -30,7 +30,6 @@
     "@ionic/angular": "^8.0.0",
     "gsap": "npm:@gsap/shockingly@^3.12.5",
     "ionicons": "^7.2.1",
-    "ng-recaptcha": "^13.2.1",
     "rxjs": "~7.8.0",
     "three": "^0.164.1",
     "tslib": "^2.3.0",
