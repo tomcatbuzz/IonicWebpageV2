@@ -2,7 +2,7 @@ import { enableProdMode, importProvidersFrom } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
 import { RouteReuseStrategy, provideRouter } from '@angular/router';
 import { IonicRouteStrategy, provideIonicAngular } from '@ionic/angular/standalone';
-import { HttpClientModule, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { provideAnimations } from '@angular/platform-browser/animations'
 import { routes } from './app/app.routes';
 import { AppComponent } from './app/app.component';
@@ -28,7 +28,7 @@ bootstrapApplication(AppComponent, {
     provideRouter(routes), 
     provideAnimations(),
 
-    importProvidersFrom(provideFirebaseApp(() => initializeApp({
+    provideFirebaseApp(() => initializeApp({
       projectId: "ionicwebpage",
       appId: "1:952994598736:web:c051e724ce521f59cca655",
       databaseURL: "https://ionicwebpage.firebaseio.com",
@@ -36,7 +36,7 @@ bootstrapApplication(AppComponent, {
       apiKey: "AIzaSyBytj8gvFINALswEUnSwtUBBRoDfUuQDJw",
       authDomain: "ionicwebpage.firebaseapp.com",
       messagingSenderId: "952994598736"
-    })), 
+    }), 
 
     provideAnalytics(() => getAnalytics()), 
     ScreenTrackingService, 
@@ -44,8 +44,8 @@ bootstrapApplication(AppComponent, {
     provideFunctions(() => getFunctions()), 
     provideStorage(() => getStorage())),
 
-    importProvidersFrom(RecaptchaV3Module, HttpClientModule), 
-    // provideHttpClient(withInterceptorsFromDi()),
+    importProvidersFrom(RecaptchaV3Module), 
+    provideHttpClient(withInterceptorsFromDi()),
     
     { provide: RECAPTCHA_V3_SITE_KEY, useValue: environment.recaptcha.siteKey },
     
