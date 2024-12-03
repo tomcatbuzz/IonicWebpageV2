@@ -2,7 +2,7 @@ import { Component, OnInit, inject, NgZone } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { ReCaptchaV3Service } from 'ng-recaptcha';
+import { ReCaptchaV3Service } from 'ng-recaptcha-2';
 import { Router } from '@angular/router';
 import { Database, push, ref, set } from '@angular/fire/database';
 import { UIService } from '../ui.service';
