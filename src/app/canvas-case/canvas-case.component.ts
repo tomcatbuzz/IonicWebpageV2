@@ -297,8 +297,8 @@ onMouseMove(event: MouseEvent) {
       r: nextColor.r,
       g: nextColor.g,
       b: nextColor.b,
-      duration: 0.5,
-      // ease here????
+      duration: 0.8,
+      ease: 'circ.inOut'
     });
   })
 

@@ -3,11 +3,11 @@ import { ActivatedRoute } from '@angular/router';
 import { IonHeader, IonToolbar, IonButtons, IonMenuButton, IonTitle, IonContent } from '@ionic/angular/standalone';
 
 @Component({
-  selector: 'app-folder',
-  templateUrl: './folder.page.html',
-  styleUrls: ['./folder.page.scss'],
-  standalone: true,
-  imports: [IonHeader, IonToolbar, IonButtons, IonMenuButton, IonTitle, IonContent],
+    selector: 'app-folder',
+    templateUrl: './folder.page.html',
+    styleUrls: ['./folder.page.scss'],
+    imports: [IonHeader, IonToolbar, IonButtons, IonMenuButton, IonTitle, IonContent],
+    standalone: true
 })
 export class FolderPage implements OnInit {
   public folder!: string;

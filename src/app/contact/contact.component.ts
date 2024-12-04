@@ -12,11 +12,13 @@ import { HeaderComponent } from '../header/header.component';
 import { FooterComponent } from '../footer/footer.component';
 
 @Component({
-  selector: 'app-contact',
-  templateUrl: './contact.component.html',
-  styleUrls: ['./contact.component.scss'],
-  standalone: true,
-  imports: [IonList, IonTextarea, IonCard, IonSpinner, IonLabel, IonItem, IonNote, IonCol, IonGrid, IonRow, IonInput, IonButton, IonHeader, IonToolbar, IonButtons, IonMenuButton, IonTitle, IonContent, HeaderComponent, FooterComponent, ReactiveFormsModule, CommonModule],
+    selector: 'app-contact',
+    templateUrl: './contact.component.html',
+    styleUrls: ['./contact.component.scss'],
+    standalone: true,
+    imports: [IonList, IonTextarea, IonCard, IonItem, IonNote, IonCol, IonGrid, IonRow, IonInput, IonButton, IonToolbar, IonTitle, IonContent, HeaderComponent, FooterComponent, ReactiveFormsModule, CommonModule],
+    
+    // providers: [ReCaptchaV3Service]
 })
 export class ContactComponent  implements OnInit {
   private db = inject(Database)

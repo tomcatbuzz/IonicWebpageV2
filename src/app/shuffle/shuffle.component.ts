@@ -11,11 +11,11 @@ import { CommonModule } from '@angular/common';
 gsap.registerPlugin(SplitText, ScrambleTextPlugin);
 
 @Component({
-  selector: 'app-shuffle',
-  templateUrl: './shuffle.component.html',
-  styleUrls: ['./shuffle.component.scss'],
-  standalone: true,
-  imports: [CommonModule]
+    selector: 'app-shuffle',
+    templateUrl: './shuffle.component.html',
+    styleUrls: ['./shuffle.component.scss'],
+    imports: [CommonModule],
+    standalone: true
 })
 export class ShuffleComponent implements AfterViewInit, OnDestroy {
 

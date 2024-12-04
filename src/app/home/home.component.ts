@@ -13,11 +13,11 @@ import { cube } from 'ionicons/icons';
 import { CanvasCaseComponent } from '../canvas-case/canvas-case.component';
 
 @Component({
-  selector: 'app-home',
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss'],
-  standalone: true,
-  imports: [IonHeader, IonToolbar, IonButtons, IonMenuButton, IonTitle, IonContent, HeaderComponent, FooterComponent, ShuffleComponent, CanvasCaseComponent]
+    selector: 'app-home',
+    templateUrl: './home.component.html',
+    styleUrls: ['./home.component.scss'],
+    imports: [IonHeader, IonToolbar, IonButtons, IonMenuButton, IonTitle, IonContent, HeaderComponent, FooterComponent, ShuffleComponent, CanvasCaseComponent],
+    standalone: true
 })
 export class HomeComponent  implements OnInit {
   // @ViewChild('rendererContainer', { static: true }) rendererContainer!: ElementRef<HTMLCanvasElement>;
